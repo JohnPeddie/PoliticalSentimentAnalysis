@@ -136,8 +136,8 @@ def main():
     get_republicans = get_subreddit(url_republicans, 50, buildAPIConnection())
     print("Fetching Democratic Posts ...")
     get_democrats = get_subreddit(url_democrats, 50, buildAPIConnection())
-    repDF = buildDataFrame(get_republicans)
-    demDF = buildDataFrame(get_democrats)
+    repDF = buildDataFrame(get_republicans).drop_duplicates()
+    demDF = buildDataFrame(get_democrats).drop_duplicates()
 
     masterDF = fetchReadingGrade(fetchReadibilityScore(pd.merge(repDF, demDF,'outer')))
     graphStats(masterDF)
@@ -160,6 +160,7 @@ def main():
     plt.show()
 
     print(masterDF)
+    masterDF.to_csv('./data/masterDF.csv', index=False)
 
 
 if __name__ == "__main__":

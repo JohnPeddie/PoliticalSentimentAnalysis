@@ -13,6 +13,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_extraction import text
 from sklearn.metrics import accuracy_score,recall_score,precision_score, confusion_matrix
 import mplcursors
+import mpld3
+from mpld3 import plugins
 
 def cleanMasterCSV(masterCSV):
 
@@ -150,22 +152,44 @@ def lrPredictor(lr,cvec, testData):
     confidence = probability[0][prediction[0]]
     print("Confidence: ", confidence)
     return  prediction,probability
+
 def compassPredictions(lr0,cvec0,lr1,cvec1,testPhrases):
+
+    fig = plt.figure(figsize=(14, 14), dpi=80)
     plt.plot([.5, .5], [1, 0], 'k-', lw=2)
     plt.plot([0, 1], [.5, .5], 'k-', lw=2)
     plt.xlim(0, 1)
     plt.ylim(0, 1)
-    plt.title("Political distribution for a group of test phrases")
+    plt.title("Political Alignment of Donald Trump's last 3000 tweets")
     plt.xlabel("Economic Left/Right")
     plt.ylabel("Economic Libertarian/Authoritarian")
     plt.grid()
-
+    xpoints =[]
+    ypoints =[]
+    labels =[]
     for phrase in testPhrases:
         x = ((lrPredictor(lr0, cvec0, [phrase]))[1][0][0])
         y = ((lrPredictor(lr1, cvec1, [phrase]))[1][0][1])
-        plt.scatter(x, y,label =phrase)
+        xpoints.append(x)
+        ypoints.append(y)
+        labels.append(phrase)
+        (plt.scatter(x, y,label =phrase))
+    points = plt.scatter(xpoints,ypoints,c="red")
     mplcursors.cursor()
+    #plt.legend( loc = 'upper center', bbox_to_anchor = (0.5, 0.5),ncol=1,fontsize='x-small')
+
+
+    print(points)
+    tooltip = plugins.PointHTMLTooltip(points, labels,
+                                       voffset=10, hoffset=10)
+    plugins.connect(fig, tooltip)
+    html_str = mpld3.fig_to_html(fig)
+    Html_file = open("index.html", "w")
+    Html_file.write(html_str)
+    Html_file.close()
+    mpld3.show()
     plt.show()
+
 
 
 
@@ -182,6 +206,19 @@ def compassPrediction(lr0,cvec0,lr1,cvec1,testPhrase):
     plt.ylabel("Economic Libertarian/Authoritarian")
     plt.grid()
     plt.show()
+
+def csvToListOfStrings(csv):
+    df = pd.read_csv(csv)
+    df = df.drop(["id","link","date","retweets","favorites","mentions","hashtags"],axis= 1)
+    N = 40000
+    df = df.iloc[N:, :]
+    listOfTweets =[]
+    for i in df['content']:
+        if "https" not in i and "twitter" not in i:
+            listOfTweets.append(i)
+    return listOfTweets
+
+
 
 
 def MLmain():
@@ -202,7 +239,7 @@ def MLmain():
     lr0,cvec0 = textLRCVtest(masterDfCleanedDemRep,stopWords,"DemRep")
     lr1,cvec1 = textLRCVtest(masterDfCleanedAuthLib,stopWords,"AuthLib")
 
-    compassPredictions(lr0,cvec0,lr1,cvec1,["North Korea is the best Korea", "Former NY Gov Cuomo charged with sex crime months after resigning amid harassment probe"])
+    compassPredictions(lr0,cvec0,lr1,cvec1,csvToListOfStrings('./data/realdonaldtrump.csv'))
 
 
 

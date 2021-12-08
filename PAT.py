@@ -23,7 +23,7 @@ def cleanMasterCSV(masterCSV):
     if (masterDf['subreddit'][0])== "republicans":
         masterDf['subreddit'] = masterDf['subreddit'].map(lambda x: 1 if x == "democrats" else 0)
     else:
-        masterDf['subreddit'] = masterDf['subreddit'].map(lambda x: 3 if x == "AuthoritariansDiscuss" else 2)
+        masterDf['subreddit'] = masterDf['subreddit'].map(lambda x: 3 if x == "AuthoritariansDiscuss" or x == "Authoritarianism" else 2)
 
     masterDf = masterDf.drop(['selftext','link_flair_text'],axis=1).rename(columns={"title":"fullText"})
     for item in masterDf["fullText"]:
@@ -210,7 +210,7 @@ def compassPrediction(lr0,cvec0,lr1,cvec1,testPhrase):
 def csvToListOfStrings(csv):
     df = pd.read_csv(csv)
     df = df.drop(["id","link","date","retweets","favorites","mentions","hashtags"],axis= 1)
-    N = 40000
+    N = 300
     df = df.iloc[N:, :]
     listOfTweets =[]
     for i in df['content']:

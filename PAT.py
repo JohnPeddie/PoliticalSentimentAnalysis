@@ -160,7 +160,7 @@ def compassPredictions(lr0,cvec0,lr1,cvec1,testPhrases):
     plt.plot([0, 1], [.5, .5], 'k-', lw=2)
     plt.xlim(0, 1)
     plt.ylim(0, 1)
-    plt.title("Political Alignment of Donald Trump's last 3000 tweets")
+    plt.title("Political Alignment of Donald Trump's last 30000- tweets")
     plt.xlabel("Economic Left/Right")
     plt.ylabel("Economic Libertarian/Authoritarian")
     plt.grid()

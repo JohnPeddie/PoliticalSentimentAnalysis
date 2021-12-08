@@ -1,6 +1,6 @@
 # Political (sentiment) Analysis (of) Tweets - (PAT)
 A python ML and NLP project that attempts to determine political sentiment/allignment from a message trained on reddit posts and tweets.
-Current demo link: https://trumpspoliticalcompassdemo.netlify.app/
+Current demo link: https://trumpspoliticalcompassdemo.netlify.app/ and: https://fivepoliticalleadersonthecompass.netlify.app/
 
 ## How to - Initial Set Up:
 1. Clone the repo,

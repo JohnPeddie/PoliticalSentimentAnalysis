@@ -20,8 +20,8 @@ def cleanMasterCSV(masterCSV):
 
     textLengths=[]
     masterDf = pd.read_csv(masterCSV)
-    if (masterDf['subreddit'][0])== "republicans":
-        masterDf['subreddit'] = masterDf['subreddit'].map(lambda x: 1 if x == "democrats" else 0)
+    if (masterDf['subreddit'][0])== "republicans" or (masterDf['subreddit'][0])=="the_donald" or (masterDf['subreddit'][0]) == "Conservative" or (masterDf['subreddit'][0]) == "socialism":
+        masterDf['subreddit'] = masterDf['subreddit'].map(lambda x: 1 if x == "democrats" or x == "socialism" else 0)
     else:
         masterDf['subreddit'] = masterDf['subreddit'].map(lambda x: 3 if x == "AuthoritariansDiscuss" or x == "Authoritarianism" else 2)
 
@@ -160,7 +160,7 @@ def compassPredictions(lr0,cvec0,lr1,cvec1,testPhrases):
     plt.plot([0, 1], [.5, .5], 'k-', lw=2)
     plt.xlim(0, 1)
     plt.ylim(0, 1)
-    plt.title("Political Alignment of Donald Trump's last 30000- tweets")
+    plt.title("Political Alignment of Donald Trump's last 3000 tweets")
     plt.xlabel("Economic Left/Right")
     plt.ylabel("Economic Libertarian/Authoritarian")
     plt.grid()
@@ -170,10 +170,11 @@ def compassPredictions(lr0,cvec0,lr1,cvec1,testPhrases):
     for phrase in testPhrases:
         x = ((lrPredictor(lr0, cvec0, [phrase]))[1][0][0])
         y = ((lrPredictor(lr1, cvec1, [phrase]))[1][0][1])
-        xpoints.append(x)
-        ypoints.append(y)
-        labels.append(phrase)
-        (plt.scatter(x, y,label =phrase))
+        if (0.01<x<0.99) and (0.01<y<0.99):
+            xpoints.append(x)
+            ypoints.append(y)
+            labels.append(phrase)
+            (plt.scatter(x, y,label =phrase))
     points = plt.scatter(xpoints,ypoints,c="red")
     mplcursors.cursor()
     #plt.legend( loc = 'upper center', bbox_to_anchor = (0.5, 0.5),ncol=1,fontsize='x-small')
@@ -210,7 +211,7 @@ def compassPrediction(lr0,cvec0,lr1,cvec1,testPhrase):
 def csvToListOfStrings(csv):
     df = pd.read_csv(csv)
     df = df.drop(["id","link","date","retweets","favorites","mentions","hashtags"],axis= 1)
-    N = 300
+    N = 40000
     df = df.iloc[N:, :]
     listOfTweets =[]
     for i in df['content']:

@@ -132,6 +132,7 @@ def frequencies(df,subreddit):
 def main():
     url_democrats = "https://oauth.reddit.com/r/Democrats/.json"
     url_republicans = "https://oauth.reddit.com/r/Republicans/.json"
+    url_conservatives = "https://oauth.reddit.com/r/Conservative/.json"
     print("Fetching Republican Posts ...")
     get_republicans = get_subreddit(url_republicans, 50, buildAPIConnection())
     print("Fetching Democratic Posts ...")

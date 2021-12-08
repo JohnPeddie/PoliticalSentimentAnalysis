@@ -18,7 +18,6 @@ def fetchData(postedBefore, postedAfter, subreddit, limit, api):
 def buildDataFrame(posts):
     df = pd.DataFrame()
     for post in posts:
-
         fullPostTitle = re.sub(r"\r\n", " ", post['title'])
         fullPostTitle = re.sub("[^0-9A-Za-z ]","",fullPostTitle)
 
@@ -42,14 +41,14 @@ def mergeCSVs(masterDF,CSV):
 
 def main():
     api = PushshiftAPI()
-    postedAfter = int(datetime.datetime(2019, 6, 1).timestamp())
-    postedBefore = int(datetime.datetime(2021, 1, 30).timestamp())
-    subreddit = "Authoritarianism"
+    postedAfter = int(datetime.datetime(2018, 6, 1).timestamp())
+    postedBefore = int(datetime.datetime(2020, 1, 30).timestamp())
+    subreddit = "socialism"
     limit = 1000
     posts = fetchData(postedBefore, postedAfter, subreddit, limit, api)
     masterDF = buildDataFrame(posts)
-    masterAuthLibDF = mergeCSVs(masterDF,'data/masterDFAuthLib.csv')
-    masterAuthLibDF.to_csv('./data/masterDFAuthLib.csv', index=False)
+    masterAuthLibDF = mergeCSVs(masterDF,'data/masterDF.csv')
+    masterAuthLibDF.to_csv('./data/masterDF.csv', index=False)
 
 
 

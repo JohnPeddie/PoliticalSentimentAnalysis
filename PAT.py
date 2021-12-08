@@ -160,7 +160,7 @@ def compassPredictions(lr0,cvec0,lr1,cvec1,testPhrases):
     plt.plot([0, 1], [.5, .5], 'k-', lw=2)
     plt.xlim(0, 1)
     plt.ylim(0, 1)
-    plt.title("Political Alignment of Donald Trump's last 3000 tweets")
+    plt.title("Political Alignment of Boris Johnson's last 100 tweets")
     plt.xlabel("Economic Left/Right")
     plt.ylabel("Economic Libertarian/Authoritarian")
     plt.grid()
@@ -176,6 +176,7 @@ def compassPredictions(lr0,cvec0,lr1,cvec1,testPhrases):
             labels.append(phrase)
             (plt.scatter(x, y,label =phrase))
     points = plt.scatter(xpoints,ypoints,c="red")
+    print(len(labels))
     mplcursors.cursor()
     #plt.legend( loc = 'upper center', bbox_to_anchor = (0.5, 0.5),ncol=1,fontsize='x-small')
 
@@ -185,7 +186,7 @@ def compassPredictions(lr0,cvec0,lr1,cvec1,testPhrases):
                                        voffset=10, hoffset=10)
     plugins.connect(fig, tooltip)
     html_str = mpld3.fig_to_html(fig)
-    Html_file = open("index.html", "w")
+    Html_file = open("indexBoris.html", "w")
     Html_file.write(html_str)
     Html_file.close()
     mpld3.show()
@@ -208,10 +209,20 @@ def compassPrediction(lr0,cvec0,lr1,cvec1,testPhrase):
     plt.grid()
     plt.show()
 
-def csvToListOfStrings(csv):
+def csvToListOfStringsTrump(csv):
     df = pd.read_csv(csv)
     df = df.drop(["id","link","date","retweets","favorites","mentions","hashtags"],axis= 1)
     N = 40000
+    df = df.iloc[N:, :]
+    listOfTweets =[]
+    for i in df['content']:
+        if "https" not in i and "twitter" not in i:
+            listOfTweets.append(i)
+    return listOfTweets
+
+def csvToListOfStringsBoris(csv):
+    df = pd.read_csv(csv)
+    N = 0
     df = df.iloc[N:, :]
     listOfTweets =[]
     for i in df['content']:
@@ -240,8 +251,8 @@ def MLmain():
     lr0,cvec0 = textLRCVtest(masterDfCleanedDemRep,stopWords,"DemRep")
     lr1,cvec1 = textLRCVtest(masterDfCleanedAuthLib,stopWords,"AuthLib")
 
-    compassPredictions(lr0,cvec0,lr1,cvec1,csvToListOfStrings('./data/realdonaldtrump.csv'))
-
+    #compassPredictions(lr0,cvec0,lr1,cvec1,csvToListOfStringsTrump('./data/realdonaldtrump.csv'))
+    compassPredictions(lr0,cvec0,lr1,cvec1,csvToListOfStringsBoris('./data/borisjohnson.csv'))
 
 
 
